@@ -5,26 +5,37 @@
   box-sizing: border-box;
 }
 
-body {
-  background: black;
-  color: white;
-  font-family: "Outfit", sans-serif;
+/* Navbar container - full width */
+/* Reset body margins/padding */
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
 }
 
-/* Navbar container */
+/* Navbar container - full width background */
 .navbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 10px 40px;
-  text-transform: capitalize;
-
-  position: sticky; /* or use fixed if you want it always on top */
+  position: sticky;  /* keeps it at the top */
   top: 0;
-  background-color: black; /* ensures background covers content behind */
-  z-index: 999; /* makes sure navbar stays on top */
-  padding: 10px 40px;
+  left: 0;
+  width: 100%;       /* full width */
+  background-color: black; /* full background color */
+  z-index: 999;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 40px; /* internal spacing for content */
+  box-sizing: border-box;
 }
+
+/* Optional: reduce padding on small screens */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 10px 20px; /* flush content */
+  }
+}
+
+
 
 
 /* Logo text */
@@ -52,7 +63,7 @@ body {
 .nav-menu {
   display: flex;
   align-items: center;
-  gap: 30px;
+  gap: 10px;
   list-style: none;
   font-size: 20px;
 }
@@ -116,7 +127,7 @@ body {
 /* Responsive */
 @media (max-width: 768px) {
   .navbar {
-    margin: 20px 30px;
+    margin: 20px 0px;
   }
 
   .nav-right {
