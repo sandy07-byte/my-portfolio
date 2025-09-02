@@ -1,0 +1,165 @@
+/* ==============================
+   Footer Styles
+============================== */
+.footer {
+  text-transform: capitalize;
+  margin: 50px 170px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* Top Section */
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+/* Footer Logo / Name Heading with Gradient Hover */
+.footer-top-left h1 {
+  font-size: 60px;
+  font-weight: 700;
+  background: linear-gradient(270deg, #DF8908 10%, #B415FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  transition: background-position 0.5s ease, transform 0.3s;
+  background-size: 200% auto;
+  cursor: pointer;
+}
+
+.footer-top-left h1:hover {
+  background-position: right center;
+  transform: scale(1.05);
+}
+
+/* Footer Paragraph */
+.footer-top-left p {
+  max-width: 550px;
+  color: #d8d8d8;
+  font-size: 20px;
+  line-height: 35px;
+  position: relative;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+/* Hover effect under paragraph */
+.footer-top-left p::after {
+  content: '';
+  position: absolute;
+  width: 0%;
+  height: 3px;
+  bottom: -5px;
+  left: 0;
+  background: linear-gradient(270deg, #DF8908 10%, #B415FF 100%);
+  transition: width 0.4s ease;
+}
+
+.footer-top-left p:hover::after {
+  width: 100%;
+}
+
+/* Social Media & Phone Links */
+.socialmedia-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  color: #d8d8d8;
+  cursor: pointer;
+  transition: color 0.3s, transform 0.3s;
+}
+
+.socialmedia-detail img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  transition: transform 0.3s;
+}
+
+/* Hover Effect for Icons + Text */
+.socialmedia-detail:hover {
+  color: #DF8908; /* hover color */
+}
+
+.socialmedia-detail:hover img {
+  transform: scale(1.1); /* optional zoom */
+}
+
+/* Footer Bottom */
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #ccc;
+  color: #d8d8d8;
+  text-align: center;
+}
+
+/* ==============================
+   Responsive Styles
+============================== */
+
+/* Tablets */
+@media (max-width: 1024px) {
+  .footer {
+    margin: 40px 80px;
+  }
+
+  .footer-top {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer-top-left p {
+    font-size: 18px;
+  }
+
+  .socialmedia-detail img {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+/* Mobiles */
+@media (max-width: 768px) {
+  .footer {
+    margin: 30px 20px;
+  }
+
+  .footer-top {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .footer-bottom {
+    font-size: 14px;
+  }
+}
+
+/* Small Phones */
+@media (max-width: 480px) {
+  .footer-top-left h1 {
+    font-size: 36px;
+  }
+
+  .footer-top-left p {
+    font-size: 16px;
+    line-height: 28px;
+  }
+
+  .socialmedia-detail img {
+    width: 30px;
+    height: 30px;
+  }
+}

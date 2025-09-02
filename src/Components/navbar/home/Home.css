@@ -1,0 +1,130 @@
+.hero {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 35px;
+  padding: 40px 20px;
+}
+
+.hero-title {
+  text-align: center;
+  width: 70%;
+  font-size: 90px;
+  font-weight: 600;
+  text-transform: capitalize;
+  transition: transform 0.4s ease, color 0.4s ease;
+  cursor: pointer;
+}
+
+.hero-title span {
+  background: linear-gradient(270deg, #DF8908 10%, #B415FF 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  font-weight: bold;
+  transition: transform 0.4s ease, background-position 0.5s ease;
+  background-size: 200% auto;
+}
+
+.hero-title:hover span {
+  transform: scale(1.05);
+  background-position: right center;
+}
+
+.hero-content {
+  width: 50%;
+  text-align: center;
+  font-size: 24px;
+  line-height: 40px;
+  transition: transform 0.4s ease, color 0.4s ease;
+  cursor: default;
+}
+
+.hero-content:hover {
+  transform: scale(1.02);
+  color: #DF8908;
+}
+
+.hero-section {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 50px;
+  text-transform: capitalize;
+}
+
+.hero-connect {
+  padding: 25px 45px;
+  border-radius: 50px;
+  background: linear-gradient(264deg, #DF8908 -5.09%, #B415FF 106.28%);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.hero-resume {
+  padding: 25px 75px;
+  border-radius: 50px;
+  border: 2px solid #fff;
+  cursor: pointer;
+}
+
+.hero-connect:hover {
+  border: 2px solid white;
+}
+
+.hero-resume:hover {
+  border-color: #B415FF;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .hero-title {
+    font-size: 70px;
+    width: 80%;
+  }
+
+  .hero-content {
+    width: 70%;
+    font-size: 20px;
+    line-height: 34px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 50px;
+    width: 90%;
+  }
+
+  .hero-content {
+    width: 90%;
+    font-size: 18px;
+    line-height: 28px;
+  }
+
+  .hero-section {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .hero-connect,
+  .hero-resume {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 36px;
+    width: 100%;
+  }
+
+  .hero-content {
+    font-size: 16px;
+    line-height: 24px;
+  }
+}
