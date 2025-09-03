@@ -19,15 +19,15 @@
   transition: background-position 0.5s ease, transform 0.3s;
   background-size: 200% auto; /* For animated hover effect */
 }
-
+/* 
 .certification-page h2:hover {
   background-position: right center;
   transform: scale(1.05);
-}
+} */
 
 /* Subheading / Intro Paragraph */
 .cert-intro {
-  color: #555;
+  color: white;
   margin-bottom: 30px;
   padding-bottom: 20px;
   font-size: 1.1rem;
@@ -36,7 +36,7 @@
 }
 
 .cert-intro:hover {
-  color: #DF8908; /* Subtle hover effect */
+  /* color: #DF8908; Subtle hover effect */
   transform: translateY(-2px);
 }
 
@@ -54,7 +54,7 @@
   padding: 30px;
   border-radius: 16px;
   box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
-  border-top: 4px solid #DF8908; /* accent line */
+  border-top: 4px solid #DF8908;
   transition: transform 0.4s ease, box-shadow 0.4s ease, border-top-color 0.4s;
   position: relative;
   overflow: hidden;

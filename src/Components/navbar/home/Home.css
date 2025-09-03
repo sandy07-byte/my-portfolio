@@ -25,6 +25,7 @@
   font-weight: bold;
   transition: transform 0.4s ease, background-position 0.5s ease;
   background-size: 200% auto;
+  text-decoration: none;
 }
 
 .hero-title:hover span {
@@ -39,12 +40,13 @@
   line-height: 40px;
   transition: transform 0.4s ease, color 0.4s ease;
   cursor: default;
+  /* text-decoration: none; */
 }
 
-.hero-content:hover {
+/* .hero-content:hover {
   transform: scale(1.02);
   color: #DF8908;
-}
+} */
 
 .hero-section {
   display: flex;
@@ -57,11 +59,23 @@
 }
 
 .hero-connect {
-  padding: 25px 45px;
+  padding: 25px 75px;
   border-radius: 50px;
-  background: linear-gradient(264deg, #DF8908 -5.09%, #B415FF 106.28%);
+  border: 2px solid #fff;   /* same as resume */
   cursor: pointer;
+  background: transparent;  /* remove gradient */
+  color: white;             /* text stays visible */
   text-decoration: none;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+    background: linear-gradient(264deg, #DF8908 -5.09%, #B415FF 106.28%);
+    display: inline-block;
+}
+
+.hero-connect:hover {
+  border-color: #B415FF;    /* same hover as resume */
+  /* transform: scale(1.05); 
+    optional: subtle hover scaling */
+    text-decoration: none;
 }
 
 .hero-resume {
@@ -69,15 +83,18 @@
   border-radius: 50px;
   border: 2px solid #fff;
   cursor: pointer;
-}
-
-.hero-connect:hover {
-  border: 2px solid white;
+  background: transparent;
+  color: white;
+  text-decoration: none;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+    background: linear-gradient(264deg, #DF8908 -5.09%, #B415FF 106.28%);
 }
 
 .hero-resume:hover {
   border-color: #B415FF;
+  transform: scale(1.05);
 }
+
 
 /* Responsive */
 @media (max-width: 1024px) {
@@ -127,4 +144,13 @@
     font-size: 16px;
     line-height: 24px;
   }
+
+
+    .hero-connect,
+  .hero-resume {
+    padding: 15px 40px;   /* smaller padding */
+    font-size: 14px;      /* smaller text */
+    width: auto;          /* don't force full width */
+  }
 }
+

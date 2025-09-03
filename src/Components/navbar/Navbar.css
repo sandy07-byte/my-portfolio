@@ -40,11 +40,26 @@ body, html {
 
 /* Logo text */
 .logo-text {
+  padding-bottom: 10px;
   font-size: 28px;
+  font-weight: 700;
+  display: inline-block;
+  cursor: pointer;
+  background: linear-gradient(270deg, #DF8908 10%, #B415FF 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: background-position 0.5s ease, transform 0.3s;
+  background-size: 200% auto; 
+
+
+
+
+  /* font-size: 28px;
   font-weight: 700;
   color: white;
   cursor: pointer;
-  transition: color 0.3s, transform 0.3s;
+  transition: color 0.3s, transform 0.3s; */
 }
 
 .logo-text:hover {
@@ -63,7 +78,7 @@ body, html {
 .nav-menu {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 25px;
   list-style: none;
   font-size: 20px;
 }
@@ -80,41 +95,53 @@ body, html {
   text-decoration: none;
   color: white;
   position: relative;
-  transition: color 0.3s;
+  /* transition: color 0.3s; */
 }
 
-.anchor-link::after {
+/* .anchor-link::after {
   content: "";
   position: absolute;
   width: 0;
   height: 2px;
   left: 0;
-  bottom: -3px; /* position of underline */
-  background-color: #DF8908;
-  transition: width 0.3s;
-}
+  /* bottom: -3px */
+  /* background-color: #DF8908; */
+  /* transition: width 0.3s; */
+/* } */ 
 
 .anchor-link:hover::after {
   width: 100%;
 }
 
-.anchor-link:hover {
+/* .anchor-link:hover {
   color: #DF8908;
-}
+} */
 
 /* Connect button - no hover effect */
 .nav-connect {
-  padding: 12px 28px;
+
+
+
+  /* padding: 25px 75px; */
+  /* border-radius: 50px; */
+  border: 2px solid #fff;   /* same as resume */
+  cursor: pointer;
+  background: transparent;  /* remove gradient */
+  color: white;             /* text stays visible */
+  text-decoration: none;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+    background: linear-gradient(264deg, #DF8908 -5.09%, #B415FF 106.28%);
+    display: inline-block;
+   padding: 12px 28px;
   border-radius: 40px;
   background-color: lightcoral;
   font-size: 18px;
-  cursor: pointer;
+  cursor: pointer; 
 }
 
 .nav-connect:hover {
-  transform: none;
-  background-color: lightskyblue;
-  color: white;
+    border-color: #B415FF;
+  
 }
 
 /* Open/close icons */
