@@ -1,0 +1,45 @@
+apiVersion: v2
+name: my-portfolio
+description: A Helm chart for deploying the React portfolio application
+type: application
+version: 0.1.0
+appVersion: "1.0"
+
+# Default values for my-portfolio.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: <REGISTRY_USERNAME>/portfolio
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  name: ""
+  pathType: ImplementationSpecific
+  path: /
+  hosts:
+    - host: chart-example.local
+      paths:
+        - /
+  tls: []  # Treated as a list of maps
+  # - secretName: chart-example-tls
+  #   hosts:
+  #     - chart-example.local
+
+resources: {}
+# We usually recommend keeping this as a YAML block, but you can also specify
+# your resources here if you prefer.
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

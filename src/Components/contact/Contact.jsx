@@ -9,23 +9,35 @@ import call from '../../assets/contact.jpg';
   const onSubmit = async (event) => {
     event.preventDefault();
     setResult("Sending....");
+    
     const formData = new FormData(event.target);
+    const contactData = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      message: formData.get("message")
+    };
 
-    formData.append("access_key", "d7165faf65653253af69abbaae721431");
+    try {
+      const response = await fetch("http://localhost:5000/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(contactData)
+      });
 
-    const response = await fetch("https://api.web3forms.com/submit", {
-      method: "POST",
-      body: formData
-    });
+      const data = await response.json();
 
-    const data = await response.json();
-
-    if (data.success) {
-      setResult("Form Submitted Successfully");
-      event.target.reset();
-    } else {
-      console.log("Error", data);
-      setResult(data.message);
+      if (data.ok) {
+        setResult("Message sent successfully!");
+        event.target.reset();
+      } else {
+        console.log("Error", data);
+        setResult(data.error || "Failed to send message. Please try again.");
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+      setResult("Failed to send message. Please check if the server is running.");
     }
   };
 

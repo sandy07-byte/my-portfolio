@@ -1,0 +1,85 @@
+{
+  "annotations": [
+    {
+      "datasource": "Prometheus",
+      "editable": true,
+      "gridPos": {
+        "h": 8,
+        "i": "1",
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "title": "CPU Usage",
+      "type": "graph",
+      "targets": [
+        {
+          "expr": "sum(rate(container_cpu_usage_seconds_total{container_name!=\"POD\"}[5m])) by (pod)",
+          "interval": "",
+          "legendFormat": "{{pod}}",
+          "refId": "A"
+        }
+      ],
+      "xaxis": {
+        "mode": "time"
+      },
+      "yaxes": [
+        {
+          "format": "percent",
+          "label": "CPU Usage",
+          "logBase": 1,
+          "min": 0,
+          "max": 1
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "min": 0
+        }
+      ]
+    },
+    {
+      "datasource": "Prometheus",
+      "editable": true,
+      "gridPos": {
+        "h": 8,
+        "i": "2",
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 2,
+      "title": "Memory Usage",
+      "type": "graph",
+      "targets": [
+        {
+          "expr": "sum(container_memory_usage_bytes{container_name!=\"POD\"}) by (pod)",
+          "interval": "",
+          "legendFormat": "{{pod}}",
+          "refId": "A"
+        }
+      ],
+      "xaxis": {
+        "mode": "time"
+      },
+      "yaxes": [
+        {
+          "format": "bytes",
+          "label": "Memory Usage",
+          "logBase": 1,
+          "min": 0
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "min": 0
+        }
+      ]
+    }
+  ],
+  "title": "Portfolio Application Monitoring",
+  "version": 1
+}

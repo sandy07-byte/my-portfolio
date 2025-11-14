@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: portfolio-memory-alert
+  labels:
+    app: portfolio
+spec:
+  groups:
+  - name: memory-alerts
+    rules:
+    - alert: HighMemoryUsage
+      expr: sum(container_memory_usage_bytes{pod=~"portfolio-.*"}) / sum(kube_pod_container_resource_limits_memory_bytes{pod=~"portfolio-.*"}) > 0.8
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "High Memory Usage Detected"
+        description: "The memory usage of the portfolio pods is above 80% for more than 5 minutes."

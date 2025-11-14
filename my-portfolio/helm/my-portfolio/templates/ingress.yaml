@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-portfolio-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: my-portfolio.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: my-portfolio-service
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - my-portfolio.example.com
+      secretName: my-portfolio-tls-secret

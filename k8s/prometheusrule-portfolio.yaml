@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: portfolio-memory-alerts
+  labels:
+    role: alert-rules
+spec:
+  groups:
+    - name: portfolio.rules
+      rules:
+        - alert: PortfolioHighMemoryUsage
+          expr: |
+            sum by (pod) (container_memory_working_set_bytes{namespace="default", pod=~"portfolio-deployment-.*"})
+            > 200 * 1024 * 1024
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Portfolio pod memory usage high (>{{ $value }})"
+            description: "Pod {{ $labels.pod }} in namespace default is using more than 200Mi for over 5 minutes."

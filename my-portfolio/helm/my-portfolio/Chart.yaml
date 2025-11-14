@@ -1,0 +1,15 @@
+name: my-portfolio
+version: 0.1.0
+description: A Helm chart for deploying the React portfolio application
+type: application
+keywords:
+  - portfolio
+  - react
+  - helm
+  - kubernetes
+maintainers:
+  - name: Your Name
+    email: your.email@example.com
+sources:
+  - https://github.com/yourusername/my-portfolio
+dependencies: []

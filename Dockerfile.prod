@@ -1,0 +1,23 @@
+# Production multi-stage Dockerfile for building and serving React with NGINX
+
+# Build stage
+FROM node:18-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --prefer-offline --no-audit --progress=false
+COPY . .
+RUN npm run build
+
+# Production stage
+FROM nginx:stable-alpine
+# Remove default nginx website
+RUN rm -rf /usr/share/nginx/html/*
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Optional: copy a custom nginx.conf if you want to tweak caching / routing
+# COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 CMD wget -qO- http://localhost/ || exit 1
+
+CMD ["nginx", "-g", "daemon off;"]
