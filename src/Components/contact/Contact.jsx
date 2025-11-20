@@ -18,7 +18,7 @@ import call from '../../assets/contact.jpg';
     };
 
     try {
-      const response = await fetch("http://localhost:5000/contact", {
+      const response = await fetch("/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -26,18 +26,42 @@ import call from '../../assets/contact.jpg';
         body: JSON.stringify(contactData)
       });
 
-      const data = await response.json();
+      // Safely parse JSON only if content-type is application/json
+      let data = null;
+      try {
+        const contentType = response.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+          data = await response.json();
+        } else {
+          const text = await response.text();
+          data = { ok: false, error: text || `HTTP ${response.status}` };
+        }
+      } catch (parseErr) {
+        console.error('Failed to parse response body:', parseErr);
+        data = { ok: false, error: 'Invalid server response' };
+      }
 
-      if (data.ok) {
-        setResult("Message sent successfully!");
+      if (response.ok && data && data.ok) {
+        const successMessage = data.message || "Message submitted successfully!";
+        setResult(successMessage);
+        // show explicit alert for immediate user feedback with a concise message
+        try {
+          window.alert('Submitted successfully');
+        } catch (e) {
+          // ignore if alert is unavailable
+        }
         event.target.reset();
       } else {
-        console.log("Error", data);
-        setResult(data.error || "Failed to send message. Please try again.");
+        console.log("Error", data || response.statusText);
+        const errMsg = (data && data.error) || `Failed to send message. HTTP ${response.status}`;
+        setResult(errMsg);
+        try { window.alert(errMsg); } catch (e) {}
       }
     } catch (error) {
       console.error("Network error:", error);
-      setResult("Failed to send message. Please check if the server is running.");
+      const netMsg = "Failed to send message. Please check if the server is running.";
+      setResult(netMsg);
+      try { window.alert(netMsg); } catch (e) {}
     }
   };
 

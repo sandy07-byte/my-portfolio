@@ -1,10 +1,10 @@
 import express from 'express';
 import cors from 'cors';
-import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import { MongoClient } from 'mongodb';
 
 // Resolve __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -22,6 +22,27 @@ if (fs.existsSync(backendEnvPath)) {
 const app = express();
 
 const PORT = process.env.PORT || 5000;
+
+// MongoDB setup
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.1';
+const MONGO_DB = process.env.MONGO_DB || 'my_portfolio';
+let mongoClient;
+let contactsCollection;
+
+// Helper to (re)connect to MongoDB on-demand
+async function ensureMongoConnected() {
+  if (contactsCollection) return;
+  try {
+    console.log('Attempting to connect to MongoDB (on-demand)...');
+    mongoClient = new MongoClient(MONGO_URI, { serverSelectionTimeoutMS: 2000 });
+    await mongoClient.connect();
+    const db = mongoClient.db(MONGO_DB);
+    contactsCollection = db.collection('contacts');
+    console.log('✅ Connected to MongoDB at', MONGO_URI, 'db:', MONGO_DB);
+  } catch (err) {
+    console.warn('⚠️  Could not connect to MongoDB (on-demand). Contacts will not be saved. Error:', err && err.message ? err.message : err);
+  }
+}
 
 // CORS configuration
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean);
@@ -57,30 +78,7 @@ function sanitizeInput(input) {
   return String(input).replace(/[\r\n]+/g, ' ').trim();
 }
 
-function getTransporter() {
-  // Prefer explicit SMTP configuration if provided
-  if (process.env.SMTP_HOST) {
-    return nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT) || 587,
-      secure: String(process.env.SMTP_SECURE || '').toLowerCase() === 'true' || Number(process.env.SMTP_PORT) === 465,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-  }
-
-  // Fallback to well-known service (e.g., Gmail). Requires app password for Gmail.
-  const service = process.env.EMAIL_SERVICE || 'gmail';
-  return nodemailer.createTransport({
-    service,
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
-}
+// Email sending removed — backend stores contacts in MongoDB only.
 
 app.post('/contact', async (req, res) => {
   try {
@@ -102,104 +100,96 @@ app.post('/contact', async (req, res) => {
     if (message.length < 5) return res.status(400).json({ ok: false, error: 'Message is too short.' });
     if (message.length > 5000) return res.status(400).json({ ok: false, error: 'Message is too long.' });
 
-    // Ensure required env vars exist
-    const toEmail = process.env.TO_EMAIL || process.env.EMAIL_USER;
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS || !toEmail) {
-      return res.status(500).json({ ok: false, error: 'Email service is not configured on the server.' });
-    }
-
-    const transporter = getTransporter();
-
-    const fromEmail = process.env.FROM_EMAIL || process.env.EMAIL_USER;
-
-    const mailOptions = {
-      from: fromEmail, // Use authenticated sender address
-      to: toEmail,
-      replyTo: email, // Allow replying directly to the user
-      subject: `📧 New Contact Form Submission - ${name}`,
-      text: `
-📧 NEW CONTACT FORM SUBMISSION
-
-Name: ${name}
-Email: ${email}
-Date: ${new Date().toLocaleString()}
-
-Message:
-${message}
-
----
-This message was sent from your portfolio contact form.
-Reply directly to this email to respond to ${name}.
-      `.trim(),
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #f9f9f9;">
-          <div style="background: linear-gradient(135deg, #DF8908, #B415FF); color: white; padding: 20px; border-radius: 10px 10px 0 0; text-align: center;">
-            <h1 style="margin: 0; font-size: 24px;">📧 New Contact Form Submission</h1>
-          </div>
-          
-          <div style="background: white; padding: 30px; border-radius: 0 0 10px 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-            <div style="margin-bottom: 25px;">
-              <h2 style="color: #333; margin: 0 0 15px 0; font-size: 20px;">Contact Details</h2>
-              <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #DF8908;">
-                <p style="margin: 5px 0; color: #555;"><strong>Name:</strong> ${name}</p>
-                <p style="margin: 5px 0; color: #555;"><strong>Email:</strong> <a href="mailto:${email}" style="color: #B415FF; text-decoration: none;">${email}</a></p>
-                <p style="margin: 5px 0; color: #555;"><strong>Date:</strong> ${new Date().toLocaleString()}</p>
-              </div>
-            </div>
-            
-            <div style="margin-bottom: 25px;">
-              <h2 style="color: #333; margin: 0 0 15px 0; font-size: 20px;">Message</h2>
-              <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #B415FF;">
-                <p style="margin: 0; color: #555; line-height: 1.6; white-space: pre-wrap;">${message.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>
-              </div>
-            </div>
-            
-            <div style="text-align: center; padding-top: 20px; border-top: 1px solid #eee;">
-              <p style="color: #888; font-size: 14px; margin: 0;">
-                This message was sent from your portfolio contact form.<br>
-                <strong>Reply directly to this email to respond to ${name}.</strong>
-              </p>
-            </div>
-          </div>
-        </div>
-      `,
+    // Store the contact in MongoDB (if available). Try on-demand connect if not already connected.
+    await ensureMongoConnected();
+    const contactDoc = {
+      name,
+      email,
+      message,
+      createdAt: new Date()
     };
+    if (req.body.phone) contactDoc.phone = String(req.body.phone).trim();
 
-    await transporter.sendMail(mailOptions);
-    
-    console.log(`Contact form submitted successfully from ${name} (${email})`);
-    return res.status(200).json({ ok: true, message: 'Message sent successfully.' });
+    let insertResult = null;
+      if (contactsCollection) {
+        try {
+          console.log('Inserting contact document into MongoDB:', contactDoc);
+          insertResult = await contactsCollection.insertOne(contactDoc);
+          console.log('Mongo insertResult:', insertResult);
+        } catch (dbErr) {
+          console.error('Failed to save contact to MongoDB:', dbErr && dbErr.message ? dbErr.message : dbErr);
+          return res.status(500).json({ ok: false, error: 'Failed to save contact to database.' });
+        }
+      } else {
+        // If we couldn't connect to MongoDB, tell the client so they can retry later.
+        console.warn('⚠️  No MongoDB connection available; cannot save contact.');
+        return res.status(500).json({ ok: false, error: 'Database unavailable. Please try again later.' });
+      }
+
+      console.log(`Contact form saved to DB (id=${insertResult.insertedId}) from ${name} (${email}).`);
+      return res.status(200).json({ ok: true, message: 'Message submitted successfully.' });
   } catch (err) {
-    console.error('Error handling /contact:', err);
-    
+    console.error('Error handling /contact:', err && err.stack ? err.stack : err);
+
     // Provide more specific error messages for common issues
     let errorMessage = 'Failed to send message. Please try again later.';
-    if (err.code === 'EAUTH') {
+    if (err && err.code === 'EAUTH') {
       errorMessage = 'Email authentication failed. Please check email configuration.';
-    } else if (err.code === 'ECONNECTION') {
+    } else if (err && err.code === 'ECONNECTION') {
       errorMessage = 'Unable to connect to email server.';
-    } else if (err.code === 'ETIMEDOUT') {
+    } else if (err && err.code === 'ETIMEDOUT') {
       errorMessage = 'Email server timeout. Please try again.';
     }
-    
-    return res.status(500).json({ ok: false, error: errorMessage });
+
+    // In non-production return the underlying error message for easier debugging
+    const clientMessage = process.env.NODE_ENV === 'production' ? errorMessage : `${errorMessage} (${err && err.message ? err.message : 'no additional details'})`;
+    return res.status(500).json({ ok: false, error: clientMessage });
   }
+});
+
+// Error handler for malformed JSON (body-parser) and other errors
+app.use((err, req, res, next) => {
+  if (err && err.type === 'entity.parse.failed') {
+    // body-parser JSON parse error
+    console.warn('Invalid JSON payload received');
+    return res.status(400).json({ ok: false, error: 'Invalid JSON payload' });
+  }
+
+  // If it's a SyntaxError from JSON.parse
+  if (err && err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+    console.warn('SyntaxError parsing JSON:', err.message);
+    return res.status(400).json({ ok: false, error: 'Invalid JSON payload' });
+  }
+
+  if (err) {
+    console.error('Unhandled error in request pipeline:', err && err.stack ? err.stack : err);
+    return res.status(500).json({ ok: false, error: 'Internal server error' });
+  }
+
+  return next();
 });
 
 app.use((req, res) => {
   res.status(404).json({ ok: false, error: 'Not found' });
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-  console.log(`📧 Email service: ${process.env.EMAIL_SERVICE || 'gmail'}`);
-  console.log(`📨 From email: ${process.env.FROM_EMAIL || process.env.EMAIL_USER || 'Not configured'}`);
-  console.log(`📬 To email: ${process.env.TO_EMAIL || process.env.EMAIL_USER || 'Not configured'}`);
-  
-  // Check if email configuration is complete
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    console.warn('⚠️  Warning: Email configuration incomplete. Please set EMAIL_USER and EMAIL_PASS in your .env file.');
-  } else {
-    console.log('✅ Email configuration looks good!');
+// Connect to MongoDB then start server
+async function start() {
+  try {
+    mongoClient = new MongoClient(MONGO_URI, { serverSelectionTimeoutMS: 2000 });
+    await mongoClient.connect();
+    const db = mongoClient.db(MONGO_DB);
+    contactsCollection = db.collection('contacts');
+    console.log('✅ Connected to MongoDB at', MONGO_URI, 'db:', MONGO_DB);
+  } catch (err) {
+    console.warn('⚠️  Could not connect to MongoDB at', MONGO_URI, '. Contacts will not be saved. Error:', err && err.message ? err.message : err);
   }
-});
+
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
+    console.log('✅ Backend started. Contacts will be saved to MongoDB when submitted.');
+  });
+}
+
+start();
+

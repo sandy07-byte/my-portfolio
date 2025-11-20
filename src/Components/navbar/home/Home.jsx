@@ -34,7 +34,7 @@ function Home() {
           </AnchorLink>
         </div>
 
-        <div className="hero-resume">My Resume</div>
+        <a className="hero-resume" href="/resume.pdf" target="_blank" rel="noopener noreferrer">My Resume</a>
       </div>
     </div>
   );
