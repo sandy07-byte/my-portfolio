@@ -23,18 +23,22 @@ const app = express();
 
 const PORT = process.env.PORT || 5000;
 
-// MongoDB setup
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.1';
-const MONGO_DB = process.env.MONGO_DB || 'my_portfolio';
+// MongoDB Atlas setup (no local fallback)
+const MONGO_URI = process.env.MONGO_URI;
+const MONGO_DB = process.env.MONGO_DB;
 let mongoClient;
 let contactsCollection;
 
 // Helper to (re)connect to MongoDB on-demand
 async function ensureMongoConnected() {
   if (contactsCollection) return;
+  if (!MONGO_URI) {
+    console.warn('❌ MONGO_URI is not set. Please check your .env file.');
+    return;
+  }
   try {
     console.log('Attempting to connect to MongoDB (on-demand)...');
-    mongoClient = new MongoClient(MONGO_URI, { serverSelectionTimeoutMS: 2000 });
+    mongoClient = new MongoClient(MONGO_URI, { serverSelectionTimeoutMS: 10000 });
     await mongoClient.connect();
     const db = mongoClient.db(MONGO_DB);
     contactsCollection = db.collection('contacts');
@@ -176,7 +180,7 @@ app.use((req, res) => {
 // Connect to MongoDB then start server
 async function start() {
   try {
-    mongoClient = new MongoClient(MONGO_URI, { serverSelectionTimeoutMS: 2000 });
+    mongoClient = new MongoClient(MONGO_URI, { serverSelectionTimeoutMS: 10000 });
     await mongoClient.connect();
     const db = mongoClient.db(MONGO_DB);
     contactsCollection = db.collection('contacts');
