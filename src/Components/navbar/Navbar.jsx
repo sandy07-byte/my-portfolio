@@ -11,6 +11,7 @@ const Navbar = () => {
   const navItems = [
     { key: "home", label: "Home", id: "home" },
     { key: "about", label: "About Me", id: "about" },
+    { key: "projects", label: "Projects", id: "projects" },
     { key: "certification", label: "Certifications", id: "certification" },
     { key: "contact", label: "Contact Me", id: "contact" },
     { key: "social", label: "Social Media", id: "foot" }, // footer ID
