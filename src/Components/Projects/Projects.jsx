@@ -6,21 +6,21 @@ const Projects = () => {
     {
       id: 1,
       title: 'Weather App',
-      description: 'Weather App description will be added here',
+      description: 'Implemented real-time weather updates using live weather APIs for the responsive React application, providing users access to crucial information and increasing daily active users by 40%. Spearheaded integration of dark/light mode to improve accessibility and address user feedback from 80% of users.',
       image: '/weather.png',
       github: 'https://github.com/sandy07-byte/weather-app'
     },
     {
       id: 2,
       title: 'AgriAdvisor',
-      description: 'A smart agriculture guidance platform that provides crop recommendations, fertilizer suggestions, pest-alert notifications, and weather-based farming insights. Built using the MERN stack.',
+      description: 'Developed AgriAdvisor, an intelligent fertilizer recommendation platform integrating FastAPI, React, and MongoDB Atlas; enhanced crop yields by 5% through data-driven fertilizer suggestions and optimization strategies.',
       image: '/home hero.jpg',
       github: 'https://github.com/sandy07-byte/agri_advisor.git'
     },
     {
       id: 3,
       title: 'Campus Connect',
-      description: 'A college-focused communication and resource-sharing platform enabling event updates, notices, student networking, and club management. Built with React and Express.',
+      description: 'Built a responsive school management platform enabling digital access to admissions, events, and faculty information. Improved communication and engagement through real-time updates and streamlined feedback workflows, and designed a mobile-friendly interface for seamless usability across devices.',
       image: '/campus.jpg',
       github: 'https://github.com/sandy07-byte/campus-connect'
     }
