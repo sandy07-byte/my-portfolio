@@ -1,6 +1,7 @@
 import React from 'react';
 import './Certification.css';
 import nptel from "../../assets/nptel.jpg"
+import javaImage from "../../assets/java .jpeg"
 
 const certifications = [
   {
@@ -37,7 +38,7 @@ const certifications = [
     title: "Java Programming",
     issuer: "Java Certification",
     date: "May 2024",
-    link: "https://image2url.com/images/java-certificate.jpg"
+    link: javaImage
   },
 ];
 
