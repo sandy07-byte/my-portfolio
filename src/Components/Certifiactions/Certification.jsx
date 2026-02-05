@@ -34,10 +34,10 @@ const certifications = [
     link: "https://image2url.com/images/1756229878978-1078a68f-b4ff-4f93-804c-0e5c08cfaaa1.jpg"
   },
   {
-    title: "Python for Data Science",
-    issuer: "edX",
+    title: "Java Programming",
+    issuer: "Java Certification",
     date: "May 2024",
-    link: "https://www.edx.org/certificate/python-data-science"
+    link: "https://image2url.com/images/java-certificate.jpg"
   },
 ];
 
