@@ -56,10 +56,10 @@ function Certification() {
             <h3>{cert.title}</h3>
             <p className="issuer">{cert.issuer}</p>
             <p className="date">{cert.date}</p>
-            <a 
-              href={cert.link} 
-              target="_blank" 
-              rel="noreferrer" 
+            <a
+              href={cert.link}
+              target="_blank"
+              rel="noreferrer"
               className="view-btn"
             >
               View Certificate
